@@ -63,7 +63,7 @@
     <Compile Include="LoaderComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StudioAnimLoader.cs" />
-    <Compile Include="Util.cs" />
+    <Compile Include="PBMessageBox.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
