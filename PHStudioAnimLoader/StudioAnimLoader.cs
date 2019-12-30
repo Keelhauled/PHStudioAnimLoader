@@ -1,9 +1,9 @@
 ﻿using BepInEx;
-using UnityEngine;
+using BepInEx.Configuration;
+using BepInEx.Harmony;
 using HarmonyLib;
 using System.Collections;
-using BepInEx.Harmony;
-using BepInEx.Configuration;
+using UnityEngine;
 
 namespace StudioAnimLoader
 {

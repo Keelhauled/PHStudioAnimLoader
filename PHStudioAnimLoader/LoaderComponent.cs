@@ -8,20 +8,19 @@ namespace StudioAnimLoader
 {
     public class LoaderComponent : MonoBehaviour
     {
-        const string fileSuffixGrpF = "FemaleAnimeGroup_";
-        const string fileSuffixCatF = "FemaleAnimeCategory_";
-        const string fileSuffixAnimF = "FemaleAnime_";
-        const string fileSuffixHAnimF = "FemaleHAnime_";
-
-        const string fileSuffixGrpM = "MaleAnimeGroup_";
-        const string fileSuffixCatM = "MaleAnimeCategory_";
-        const string fileSuffixAnimM = "MaleAnime_";
-        const string fileSuffixHAnimM = "MaleHAnime_";
+        private const string fileSuffixGrpF = "FemaleAnimeGroup_";
+        private const string fileSuffixCatF = "FemaleAnimeCategory_";
+        private const string fileSuffixAnimF = "FemaleAnime_";
+        private const string fileSuffixHAnimF = "FemaleHAnime_";
+        private const string fileSuffixGrpM = "MaleAnimeGroup_";
+        private const string fileSuffixCatM = "MaleAnimeCategory_";
+        private const string fileSuffixAnimM = "MaleAnime_";
+        private const string fileSuffixHAnimM = "MaleHAnime_";
 
         //voice
-        const string fileSuffixVoiceGroup = "VoiceGroup_";
-        const string fileSuffixVoiceCategory = "VoiceCategory_";
-        const string fileSuffixVoice = "Voice_";
+        private const string fileSuffixVoiceGroup = "VoiceGroup_";
+        private const string fileSuffixVoiceCategory = "VoiceCategory_";
+        private const string fileSuffixVoice = "Voice_";
 
         private Dictionary<string, Dictionary<string, List<string[]>>> dicAllFileArgs = new Dictionary<string, Dictionary<string, List<string[]>>>();
 
@@ -41,7 +40,7 @@ namespace StudioAnimLoader
             force = StudioAnimLoader.Overwrite.Value;
             info = Singleton<Info>.Instance;
 
-            if (!Directory.Exists(dir) || !Directory.Exists(StudioAnimLoader.OtherGameDir.Value))
+            if(!Directory.Exists(dir) || !Directory.Exists(StudioAnimLoader.OtherGameDir.Value))
             {
                 PBMessageBox pBMessageBox = new GameObject("StudioAnimLoaderError").AddComponent<PBMessageBox>();
                 pBMessageBox.Init(500f, 60f, Screen.width, Screen.height, "StudioAnimLoader Aborted: Problem with InfoDir or OtherGameDir settings.", 2f);
@@ -54,13 +53,13 @@ namespace StudioAnimLoader
             {
                 extDir = phPath.MakeRelativeUri(extPath).ToString();
             }
-            catch (Exception e)
+            catch(Exception e)
             {
                 Console.WriteLine("*** StudioAnimLoader InfoDir or OtherGameDir Problem? *** ");
                 Console.WriteLine(e);
                 Console.WriteLine("**********");
                 PBMessageBox pBMessageBox = new GameObject("StudioAnimLoaderError").AddComponent<PBMessageBox>();
-                pBMessageBox.Init(500f, 60f, UnityEngine.Screen.width, UnityEngine.Screen.height, "StudioAnimLoader Aborted: Problem with InfoDir or OtherGameDir settings.", 2f);
+                pBMessageBox.Init(500f, 60f, Screen.width, Screen.height, "StudioAnimLoader Aborted: Problem with InfoDir or OtherGameDir settings.", 2f);
                 return;
             }
 
@@ -103,7 +102,7 @@ namespace StudioAnimLoader
             string[] suffixes = new string[] { fileSuffixGrpF, fileSuffixGrpM, fileSuffixCatF, fileSuffixCatM, fileSuffixAnimF, fileSuffixAnimM, fileSuffixHAnimF, fileSuffixHAnimM,
             fileSuffixVoiceGroup, fileSuffixVoiceCategory, fileSuffixVoice};
 
-            for (int i = 0; i < suffixes.Length; i++)
+            for(int i = 0; i < suffixes.Length; i++)
             {
                 dicAllFileArgs.Add(suffixes[i], _LoadFiles(dir, suffixes[i] + "*.MonoBehaviour"));
             }
@@ -125,26 +124,26 @@ namespace StudioAnimLoader
         {
             Dictionary<string, List<string[]>> dicFileArgs = new Dictionary<string, List<string[]>>();
             string[] files = Directory.GetFiles(dir, pattern);
-            if (files == null) return null;
+            if(files == null) return null;
 
             List<string[]> argsList;
 
-            foreach (string file in files)
+            foreach(string file in files)
             {
-                if (!File.Exists(file)) continue;
+                if(!File.Exists(file)) continue;
                 argsList = new List<string[]>();
 
-                using (StreamReader streamReader = File.OpenText(file))
+                using(StreamReader streamReader = File.OpenText(file))
                 {
                     string line = "";
                     string[] args;
-                    while ((line = streamReader.ReadLine()) != null)
+                    while((line = streamReader.ReadLine()) != null)
                     {
                         try
                         {
                             args = ParseSB3UList(line);
 
-                            if (args != null && int.TryParse(args[0], out int n) && args.Length >1)
+                            if(args != null && int.TryParse(args[0], out int n) && args.Length > 1)
                             {
                                 argsList.Add(args);
                             }
@@ -168,10 +167,9 @@ namespace StudioAnimLoader
             Dictionary<int, Info.GroupInfo> dicInfo;
             Dictionary<string, List<string[]>> dicArgs;
             int index;
-            int baseIndex;
             string pattern;
 
-            switch (sex)
+            switch(sex)
             {
                 case AnimeGroupList.SEX.Female:
                     dicInfo = info.dicFAGroupCategory;
@@ -185,7 +183,7 @@ namespace StudioAnimLoader
                     return;
             }
 
-            if (!isAnim)
+            if(!isAnim)
             {
                 dicInfo = info.dicVoiceGroupCategory;
                 pattern = fileSuffixVoiceGroup;
@@ -193,18 +191,18 @@ namespace StudioAnimLoader
 
             dicArgs = dicAllFileArgs[pattern];
 
-            if (dicArgs == null) return;
+            if(dicArgs == null) return;
 
-            foreach (string fileName in dicArgs.Keys)
+            foreach(string fileName in dicArgs.Keys)
             {
-                foreach (string[] args in dicArgs[fileName])
+                foreach(string[] args in dicArgs[fileName])
                 {
-                    if (int.TryParse(args[0], out baseIndex))
+                    if(int.TryParse(args[0], out int baseIndex))
                     {
                         index = baseIndex + groupOffset;
-                        if (dicInfo.ContainsKey(index))
+                        if(dicInfo.ContainsKey(index))
                         {
-                            if (force)
+                            if(force)
                             {
                                 dicInfo[index].name = groupSuffix + args[1];
                             }
@@ -228,10 +226,9 @@ namespace StudioAnimLoader
             Dictionary<int, Info.GroupInfo> dicInfo;
             Dictionary<string, List<string[]>> dicArgs;
             int index;
-            int baseIndex;
             string pattern;
 
-            switch (sex)
+            switch(sex)
             {
                 case AnimeGroupList.SEX.Female:
                     dicInfo = info.dicFAGroupCategory;
@@ -245,34 +242,34 @@ namespace StudioAnimLoader
                     return;
             }
 
-            if (!isAnim)
+            if(!isAnim)
             {
                 dicInfo = info.dicVoiceGroupCategory;
                 pattern = fileSuffixVoiceCategory;
             }
 
             dicArgs = dicAllFileArgs[pattern];
-            if (dicArgs == null) return;
+            if(dicArgs == null) return;
 
-            foreach (string fileName in dicArgs.Keys)
+            foreach(string fileName in dicArgs.Keys)
             {
                 // 00_00 のはず。
                 string[] ss = fileName.Replace(pattern, "").Split(new string[] { "_" }, 0);
 
-                if (int.TryParse(ss[0], out baseIndex))
+                if(int.TryParse(ss[0], out int baseIndex))
                 {
                     index = baseIndex + groupOffset;
 
-                    foreach (string[] args in dicArgs[fileName])
+                    foreach(string[] args in dicArgs[fileName])
                     {
 
-                        if (int.TryParse(args[0], out int catIndex))
+                        if(int.TryParse(args[0], out int catIndex))
                         {
-                            if (dicInfo.ContainsKey(index))
+                            if(dicInfo.ContainsKey(index))
                             {
-                                if (dicInfo[index].dicCategory.ContainsKey(catIndex))
+                                if(dicInfo[index].dicCategory.ContainsKey(catIndex))
                                 {
-                                    if (force)
+                                    if(force)
                                     {
                                         dicInfo[index].dicCategory[catIndex] = args[1];
                                     }
@@ -300,15 +297,13 @@ namespace StudioAnimLoader
             Dictionary<int, Dictionary<int, Dictionary<int, Info.AnimeLoadInfo>>> dicInfo;
             Dictionary<string, List<string[]>> dicArgs;
             int index;
-            int baseIndex;
-            int catIndex;
             string pattern;
 
-            switch (sex)
+            switch(sex)
             {
                 case AnimeGroupList.SEX.Female:
                     dicInfo = info.dicFemaleAnimeLoadInfo;
-                    if (isH)
+                    if(isH)
                     {
                         pattern = fileSuffixHAnimF;
                     }
@@ -319,7 +314,7 @@ namespace StudioAnimLoader
                     break;
                 case AnimeGroupList.SEX.Male:
                     dicInfo = info.dicMaleAnimeLoadInfo;
-                    if (isH)
+                    if(isH)
                     {
                         pattern = fileSuffixHAnimM;
                     }
@@ -333,25 +328,25 @@ namespace StudioAnimLoader
             }
 
             dicArgs = dicAllFileArgs[pattern];
-            if (dicArgs == null) return;
+            if(dicArgs == null) return;
 
-            foreach (string fileName in dicArgs.Keys)
+            foreach(string fileName in dicArgs.Keys)
             {
                 // 00_00_00 のはず。
                 //または、各行からの方が良いか？ <- でも無駄が多くなる？
                 string[] ss = fileName.Replace(pattern, "").Split(new string[] { "_" }, 0);
 
-                if (int.TryParse(ss[0], out baseIndex) && int.TryParse(ss[1], out catIndex))
+                if(int.TryParse(ss[0], out int baseIndex) && int.TryParse(ss[1], out int catIndex))
                 {
                     index = baseIndex + groupOffset;
 
-                    foreach (string[] args in dicArgs[fileName])
+                    foreach(string[] args in dicArgs[fileName])
                     {
                         //アニメの場合、グループもカテゴリーもインデックスがなければ追加
-                        if (int.TryParse(args[0], out int clipIndex))
+                        if(int.TryParse(args[0], out int clipIndex))
                         {
-                            if (!dicInfo.ContainsKey(index)) dicInfo.Add(index, new Dictionary<int, Dictionary<int, Info.AnimeLoadInfo>>());
-                            if (!dicInfo[index].ContainsKey(catIndex)) dicInfo[index].Add(catIndex, new Dictionary<int, Info.AnimeLoadInfo>());
+                            if(!dicInfo.ContainsKey(index)) dicInfo.Add(index, new Dictionary<int, Dictionary<int, Info.AnimeLoadInfo>>());
+                            if(!dicInfo[index].ContainsKey(catIndex)) dicInfo[index].Add(catIndex, new Dictionary<int, Info.AnimeLoadInfo>());
 
                             //アニメ情報入れる
                             //<0管理番号><1大きい項目><2中間項目><3表示名><4バンドルパス><5ファイル名><6クリップ名><7BreastLayerの有り無し><8揺れ制御左><9揺れ制御右><10><11アイテム有り無し><管理番号><バンドルパス><ファイル名><付ける場所><管理番号><バンドルパス><ファイル名><付ける場所>
@@ -375,9 +370,9 @@ namespace StudioAnimLoader
                                 animInfo = null;
                             }
 
-                            if (dicInfo[index][catIndex].ContainsKey(clipIndex))
+                            if(dicInfo[index][catIndex].ContainsKey(clipIndex))
                             {
-                                if (force) dicInfo[index][catIndex][clipIndex] = animInfo;
+                                if(force) dicInfo[index][catIndex][clipIndex] = animInfo;
                             }
                             else
                             {
@@ -398,33 +393,31 @@ namespace StudioAnimLoader
             Dictionary<int, Dictionary<int, Dictionary<int, Info.LoadCommonInfo>>> dicInfo;
             Dictionary<string, List<string[]>> dicArgs;
             int index;
-            int baseIndex;
-            int catIndex;
             string pattern;
 
             dicInfo = info.dicVoiceLoadInfo;
             pattern = fileSuffixVoice;
 
             dicArgs = dicAllFileArgs[pattern];
-            if (dicArgs == null) return;
+            if(dicArgs == null) return;
 
-            foreach (string fileName in dicArgs.Keys)
+            foreach(string fileName in dicArgs.Keys)
             {
                 // 00_00_00 のはず。
                 //または、各行からの方が良いか？ <- でも無駄が多くなる？
                 string[] ss = fileName.Replace(pattern, "").Split(new string[] { "_" }, 0);
 
-                if (int.TryParse(ss[0], out baseIndex) && int.TryParse(ss[1], out catIndex))
+                if(int.TryParse(ss[0], out int baseIndex) && int.TryParse(ss[1], out int catIndex))
                 {
                     index = baseIndex + groupOffset;
 
-                    foreach (string[] args in dicArgs[fileName])
+                    foreach(string[] args in dicArgs[fileName])
                     {
                         //ボイスの場合、グループもカテゴリーもインデックスがなければ追加
-                        if (int.TryParse(args[0], out int clipIndex))
+                        if(int.TryParse(args[0], out int clipIndex))
                         {
-                            if (!dicInfo.ContainsKey(index)) dicInfo.Add(index, new Dictionary<int, Dictionary<int, Info.LoadCommonInfo>>());
-                            if (!dicInfo[index].ContainsKey(catIndex)) dicInfo[index].Add(catIndex, new Dictionary<int, Info.LoadCommonInfo>());
+                            if(!dicInfo.ContainsKey(index)) dicInfo.Add(index, new Dictionary<int, Dictionary<int, Info.LoadCommonInfo>>());
+                            if(!dicInfo[index].ContainsKey(catIndex)) dicInfo[index].Add(catIndex, new Dictionary<int, Info.LoadCommonInfo>());
 
                             //ボイス情報入れる
                             //<0管理番号><1大きい項目><2中間項目><3表示名><4バンドルパス><5ファイル名>
@@ -445,9 +438,9 @@ namespace StudioAnimLoader
                                 voiceInfo = null;
                             }
 
-                            if (dicInfo[index][catIndex].ContainsKey(clipIndex))
+                            if(dicInfo[index][catIndex].ContainsKey(clipIndex))
                             {
-                                if (force) dicInfo[index][catIndex][clipIndex] = voiceInfo;
+                                if(force) dicInfo[index][catIndex][clipIndex] = voiceInfo;
                             }
                             else
                             {

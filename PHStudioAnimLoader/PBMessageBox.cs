@@ -20,7 +20,7 @@ namespace StudioAnimLoader
 
         private void OnGUI()
         {
-            if (initialized)
+            if(initialized)
             {
                 GUIStyle guiStyle = new GUIStyle(GUI.skin.textArea);
                 guiStyle.alignment = TextAnchor.MiddleCenter;
