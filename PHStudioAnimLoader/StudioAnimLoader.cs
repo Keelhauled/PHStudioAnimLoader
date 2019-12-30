@@ -1,9 +1,10 @@
 ﻿using BepInEx;
+using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using BepInEx.Harmony;
+using BepInEx.Logging;
 using HarmonyLib;
 using System.Collections;
-using UnityEngine;
 
 namespace StudioAnimLoader
 {
@@ -16,23 +17,24 @@ namespace StudioAnimLoader
         public const string Name = "StudioAnimLoader";
         public const string Version = "0.0.2.0";
 
+        internal static new ManualLogSource Logger;
+
         internal static ConfigEntry<string> InfoDir { get; set; }
         internal static ConfigEntry<string> OtherGameDir { get; set; }
         internal static ConfigEntry<string> GroupSuffix { get; set; }
         internal static ConfigEntry<int> GroupOffset { get; set; }
         internal static ConfigEntry<bool> Overwrite { get; set; }
 
-        private static GameObject bepinex;
-
         private void Awake()
         {
+            Logger = base.Logger;
+
             InfoDir = Config.Bind("General", "InfoDir", "StudioAnimLoader");
             OtherGameDir = Config.Bind("General", "OtherGameDir", "");
             GroupSuffix = Config.Bind("General", "GroupSuffix", "[MOD]");
             GroupOffset = Config.Bind("General", "GroupOffset", 100);
             Overwrite = Config.Bind("General", "Overwrite", false);
 
-            bepinex = gameObject;
             HarmonyWrapper.PatchAll(GetType());
         }
 
@@ -43,7 +45,7 @@ namespace StudioAnimLoader
 
             IEnumerator AddLoaderComponent()
             {
-                bepinex.AddComponent<LoaderComponent>();
+                Chainloader.ManagerObject.AddComponent<LoaderComponent>();
                 yield break;
             }
         }

@@ -1,4 +1,5 @@
-﻿using Studio;
+﻿using BepInEx.Logging;
+using Studio;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,8 +43,7 @@ namespace StudioAnimLoader
 
             if(!Directory.Exists(dir) || !Directory.Exists(StudioAnimLoader.OtherGameDir.Value))
             {
-                PBMessageBox pBMessageBox = new GameObject("StudioAnimLoaderError").AddComponent<PBMessageBox>();
-                pBMessageBox.Init(500f, 60f, Screen.width, Screen.height, "StudioAnimLoader Aborted: Problem with InfoDir or OtherGameDir settings.", 2f);
+                StudioAnimLoader.Logger.Log(LogLevel.Message | LogLevel.Warning, "Aborting. Problem with InfoDir or OtherGameDir settings.");
                 return;
             }
 
@@ -55,19 +55,12 @@ namespace StudioAnimLoader
             }
             catch(Exception e)
             {
-                Console.WriteLine("*** StudioAnimLoader InfoDir or OtherGameDir Problem? *** ");
-                Console.WriteLine(e);
-                Console.WriteLine("**********");
-                PBMessageBox pBMessageBox = new GameObject("StudioAnimLoaderError").AddComponent<PBMessageBox>();
-                pBMessageBox.Init(500f, 60f, Screen.width, Screen.height, "StudioAnimLoader Aborted: Problem with InfoDir or OtherGameDir settings.", 2f);
+                StudioAnimLoader.Logger.LogError($"*** StudioAnimLoader InfoDir or OtherGameDir Problem? ***\n{e}\n**********");
+                StudioAnimLoader.Logger.Log(LogLevel.Message | LogLevel.Warning, "Aborting. Problem with InfoDir or OtherGameDir settings.");
                 return;
             }
 
-            Console.WriteLine("StudioAnimLoader: Animation Load Start");
-
             LoadAll();
-
-            Console.WriteLine("StudioAnimLoader: Animation Load Complete");
         }
 
         private void LoadAll()
